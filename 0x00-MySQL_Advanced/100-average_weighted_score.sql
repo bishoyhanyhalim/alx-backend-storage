@@ -1,10 +1,16 @@
--- Show average of score
--- task 100
-SELECT * FROM users;
-SELECT * FROM projects;
-SELECT * FROM corrections;
+-- Create a procedure of ComputeAverageWeightedScoreForUser
+-- computes and git rusult
 
-CALL ComputeAverageWeightedScoreForUser((SELECT id FROM users WHERE name = "Jeanne"));
-
-SELECT "--";
-SELECT * FROM users;
+DELIMITER $$
+DROP PROCEDURE IF EXISTS ComputeAverageWeightedScoreForUser;
+CREATE PROCEDURE ComputeAverageWeightedScoreForUser (IN user_id INT)
+BEGIN
+	UPDATE users SET average_score = (SELECT
+	SUM(corrections.score * projects.weight) / SUM(projects.weight)
+	FROM corrections
+	INNER JOIN projects
+	ON projects.id = corrections.project_id
+	WHERE corrections.user_id = user_id)
+	WHERE users.id = user_id;
+END $$
+DELIMITER ;
