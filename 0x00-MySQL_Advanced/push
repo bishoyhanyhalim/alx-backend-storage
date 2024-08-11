@@ -1,0 +1,10 @@
+#!/bin/bash
+
+git add .
+
+echo "add your commint: "
+
+read commit
+git commit -m "${commit}"
+
+git push
