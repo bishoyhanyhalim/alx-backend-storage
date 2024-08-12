@@ -1,1 +1,2 @@
+// this task 3
 db.school.find()
